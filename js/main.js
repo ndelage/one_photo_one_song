@@ -55,17 +55,8 @@ var QueryParser = {
 }
 
 function App() {
-  var photoUrlResults = /photoUrl=(.*)&/.exec(window.location.href);
-  var photoUrl;
-  if(photoUrlResults && photoUrlResults.length > 1) {
-    photoUrl = photoUrlResults[1];
-  }
-
-  var songUrl;
-  var songUrlResults = /songUrl=(.*)(&|$)/.exec(window.location.href);
-  if(songUrlResults && songUrlResults.length > 1 ) {
-    songUrl = songUrlResults[1];
-  }
+  photoUrl = getQueryParam("photoUrl");
+  songUrl = getQueryParam("songUrl");
 
   this.model = new SoundStripe(photoUrl, songUrl);
 
@@ -77,6 +68,12 @@ function App() {
     this.view.render();
   }
 
+}
+
+function getQueryParam(paramName) {
+  var regex = new RegExp(paramName + "=([^&]*)")
+  var results = regex.exec(window.location.href);
+  return results[1]
 }
 
 

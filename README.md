@@ -10,7 +10,7 @@ python -m SimpleHTTPServer
 Access the app with a demo song and photo at:
 
 ```
-http://localhost:8000/?photoUrl=http://distilleryimage5.ak.instagram.com/bec4a3e6532d11e3893112e1b6328fc9_8.jpg&songUrl=http://previews.7digital.com/clips/34/4987867.clip.mp3/
+http://localhost:8000/?photoUrl=http://distilleryimage5.ak.instagram.com/bec4a3e6532d11e3893112e1b6328fc9_8.jpg&songUrl=http://mp3.ecsmedia.pl/track/music/0000/13/60/11225065/1/3_30.mp3/
 ```
 
 ## Run the tests
