@@ -1,0 +1,2 @@
+describe("SoundStripe", function() {
+});
