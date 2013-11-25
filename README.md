@@ -23,11 +23,9 @@ http://localhost:8000/spec/SpecRunner.html
 
 Why not help out with the development of this app? There are a ton of features we still need to implement:
 
-* A helper method for parsing query params
 * Tests for our existing code
 * Styling
 * Instagram profile integration (another model)
-* Another view for creating a new SoundStripe (the combo of image and song)
 * ?
 
 For this repo and submit a pull request!
