@@ -1,42 +1,43 @@
-function SoundStripe(photoUrl, songUrl) {
-  this.photoUrl = photoUrl;
-  this.songUrl = songUrl;
-}
+var SoundStripe = Backbone.Model.extend({
+  validate: function(attrs, options) {
+    if(!(attrs.photoUrl && attrs.songUrl)) {
+      return "Must include both photoUrl and songUrl";
+    }
+  }
+});
 
-SoundStripe.prototype.valid = function() {
-  return this.photoUrl && this.songUrl;
-}
+var LinkView = Backbone.View.extend({
+  template: _.template("http://localhost:8000?photoUrl=<%=photoUrl%>&songUrl=<%=songUrl%>"),
+  initialize: function() {
+    this.listenTo(this.model, 'change', this.render);
+  },
+  render: function() {
+    this.$el.html(this.template(this.model.attributes));
+  }
+});
 
-function SoundStripeView(el, model) {
-  this.$el = el;
-  this.model = model;
+var SoundStripeView = Backbone.View.extend({
+  template: _.template(Templates.soundStripe),
+  render: function() {
+    var html = this.template(this.model.attributes);
+    this.$el.html(html);
+  }
+});
 
-  this.soundStripeTemplate = _.template(Templates.soundStripe);
-}
+var SoundStripeFormView = Backbone.View.extend({
+  template: _.template(Templates.soundStripeForm),
+  events: { "submit form": "updateModel"},
+  render: function() {
+    var html = this.template(this.model);
+    this.$el.html(html);
+  },
+  updateModel: function(e) {
+    e.preventDefault();
+    this.model.set({photoUrl: this.$el.find("#photoUrl").val(),
+                    songUrl: this.$el.find("#songUrl").val()});
+  }
+});
 
-SoundStripeView.prototype.render = function() {
-  var html = this.soundStripeTemplate(this.model);
-  this.$el.html(html);
-}
-
-function SoundStripeFormView(el, model) {
-  this.$el = el;
-  this.model = model;
-  this.template = _.template(Templates.soundStripeForm);
-
-  this.$el.on('submit', 'form', this.updateModel.bind(this));
-}
-
-SoundStripeFormView.prototype.updateModel = function(e) {
-  e.preventDefault();
-  this.model.photoUrl = this.$el.find("#photoUrl").val();
-  this.model.songUrl = this.$el.find("#songUrl").val();
-}
-
-SoundStripeFormView.prototype.render = function() {
-  var html = this.template(this.model);
-  this.$el.html(html);
-}
 
 var QueryParser = {
   parseParams: function(url) {
@@ -55,26 +56,16 @@ var QueryParser = {
 }
 
 function App() {
-  var photoUrlResults = /photoUrl=(.*)&/.exec(window.location.href);
-  var photoUrl;
-  if(photoUrlResults && photoUrlResults.length > 1) {
-    photoUrl = photoUrlResults[1];
-  }
+  var params = QueryParser.parseParams(window.location.href);
+  this.model = new SoundStripe({photoUrl: params.photoUrl, songUrl: params.songUrl});
 
-  var songUrl;
-  var songUrlResults = /songUrl=(.*)(&|$)/.exec(window.location.href);
-  if(songUrlResults && songUrlResults.length > 1 ) {
-    songUrl = songUrlResults[1];
-  }
-
-  this.model = new SoundStripe(photoUrl, songUrl);
-
-  if(this.model.valid()) {
-    this.view = new SoundStripeView($("#sound-stripe"), this.model);
+  if(this.model.isValid()) {
+    this.view = new SoundStripeView({el: $("#sound-stripe"), model: this.model});
     this.view.render();
   } else {
-    this.view = new SoundStripeFormView($("#new-sound-stripe"), this.model);
+    this.view = new SoundStripeFormView({el: $("#new-sound-stripe"), model: this.model});
     this.view.render();
+    this.linkView = new LinkView({el: $("#link"), model: this.model});
   }
 
 }
