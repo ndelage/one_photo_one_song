@@ -3,11 +3,11 @@ function SoundStripe(photoUrl, songUrl) {
   this.songUrl = songUrl;
 }
 
-function SoundStripeView(selector, model) {
-  this.$el = $(selector);
+function SoundStripeView(el, model) {
+  this.$el = el;
   this.model = model;
 
-  this.soundStripeTemplate = _.template($("#sound-stripe-template").text());
+  this.soundStripeTemplate = _.template(Templates.soundStripe);
 }
 
 SoundStripeView.prototype.render = function() {
@@ -46,7 +46,7 @@ function App() {
 
   this.model = new SoundStripe(photoUrl, songUrl);
 
-  this.view = new SoundStripeView("#sound-stripe", this.model);
+  this.view = new SoundStripeView($("#sound-stripe"), this.model);
   this.view.render();
 }
 
