@@ -15,6 +15,22 @@ SoundStripeView.prototype.render = function() {
   this.$el.html(html);
 }
 
+var QueryParser = {
+  parseParams: function(url) {
+    if(url.indexOf("?") == -1) {
+      return {};
+    } else {
+      var queryString = url.substring(url.indexOf("?")+1, url.length);
+
+      return _.reduce(queryString.split("&"), function(params, pair) {
+        pair = pair.split("=");
+        params[pair[0]] = pair[1];
+        return params;
+      }, {});
+    }
+  }
+}
+
 function App() {
   var photoUrlResults = /photoUrl=(.*)&/.exec(window.location.href);
   var photoUrl;
